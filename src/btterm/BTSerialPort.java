@@ -25,6 +25,7 @@ public class BTSerialPort implements Runnable {
     private InputStreamReader reader;
     private InputStream dis;
     private OutputStream dos;
+    private BTTerm propertyChangeListener;
 
     public BTSerialPort() {
     }
@@ -92,8 +93,15 @@ public class BTSerialPort implements Runnable {
             while (true) {
                 int input;
                 if (reader != null){
+                    //System.out.println("terminal: waiting for character");
                     input = reader.read();
-                    fireProperty("character read",null,input);
+                    //System.out.println("terminal: character read " + input);
+                    if (input != -1) {
+                        fireProperty("character read",-1,input);
+                    } else {
+                        reader = null;
+                        fireProperty("disconnected",0,1);
+                    }
                 }
            }
         } catch (Exception e) {
@@ -103,5 +111,15 @@ public class BTSerialPort implements Runnable {
 
     public void write(String s) throws IOException {
         ow.write(s);
+    }
+    
+    public void addPropertyListener(BTTerm listener) {
+        propertyChangeListener = listener;
+    }
+    
+    private void fireProperty(String propertyName, int oldValue, int newValue) {
+        if (propertyChangeListener != null) {
+            propertyChangeListener.propertyChange(propertyName, oldValue, newValue);
+        }
     }
 }

@@ -5,7 +5,8 @@ import java.util.Vector;
 import javax.bluetooth.RemoteDevice;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
-import org.netbeans.microedition.lcdui.WaitScreen;
+import org.netbeans.microedition.lcdui.*;
+import org.netbeans.microedition.lcdui.custom.ConsoleScreen;
 import org.netbeans.microedition.util.SimpleCancellableTask;
 
 
@@ -17,46 +18,44 @@ public class BTTerm extends MIDlet implements CommandListener {
     public String output;
     private boolean midletPaused = false;
     private final BTSerialPort bluetoothSerialPort = new BTSerialPort();
-
-    MIDPTerminal sterm;
-
+    
 //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
     private java.util.Hashtable __previousDisplayables = new java.util.Hashtable();
+    private Command okCommand;
+    private Command backCommand5;
     private Command exitCommand;
-    private Command connectCommand;
+    private Command screenCommand;
     private Command backCommand;
-    private Command backCommand1;
-    private Command exitCommand1;
-    private Command exitCommand2;
+    private Command connectCommand;
     private Command helpCommand;
     private Command helpCommand1;
-    private Command backCommand2;
-    private Command backCommand3;
+    private Command exitCommand1;
+    private Command exitCommand2;
+    private Command backCommand1;
     private Command exitCommand3;
     private Command helpCommand2;
-    private Command composeTextCommand;
-    private Command sendCommand;
-    private Command backCommand4;
-    private Command helpCommand3;
+    private Command backCommand3;
+    private Command backCommand2;
     private Command exitCommand4;
-    private Command disconnectCommand;
-    private Command helpCommand4;
-    private Command exitCommand5;
-    private Command helpCommand5;
+    private Command helpCommand3;
+    private Command backCommand4;
+    private Command sendCommand;
+    private Command composeTextCommand;
     private Command exitCommand6;
-    private Command screenCommand;
-    private Command backCommand5;
-    private Command okCommand;
+    private Command helpCommand5;
+    private Command exitCommand5;
+    private Command helpCommand4;
+    private Command disconnectCommand;
+    private Alert alert;
+    private ConsoleScreen consoleScreen;
+    private WaitScreen deviceDiscoveryWaitScreen;
     private Form form1;
     private StringItem stringItem1;
-    private WaitScreen deviceDiscoveryWaitScreen;
-    private List devicesList;
     private WaitScreen connectWaitScreen;
+    private List devicesList;
     private Alert discoveryFailedAlert;
     private Alert connectionFailedAlert;
-    private Form terminalForm;
     private TextBox textBox;
-    private Alert alert;
     private SimpleCancellableTask task;
     private SimpleCancellableTask task1;
 //</editor-fold>//GEN-END:|fields|0|
@@ -77,13 +76,7 @@ public class BTTerm extends MIDlet implements CommandListener {
         // write pre-initialize user code here
 //GEN-LINE:|0-initialize|1|0-postInitialize
         // write post-initialize user code here
-
-        /* create the terminal and This example shows the use of midpterminal
-         * First create an instance of the MIDPTerminal passing both the
-         * display and the parent screen (in case of pressing back).
-         */
-       sterm = new MIDPTerminal(getDisplay(), getForm1());
-
+        bluetoothSerialPort.addPropertyListener(this);
     }//GEN-BEGIN:|0-initialize|2|
 //</editor-fold>//GEN-END:|0-initialize|2|
 
@@ -96,8 +89,7 @@ public class BTTerm extends MIDlet implements CommandListener {
         // write pre-action user code here
 switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|3-startMIDlet|1|3-postAction
         // write post-action user code here
-        switchDisplayable(null, sterm);
-    }//GEN-BEGIN:|3-startMIDlet|2|
+}//GEN-BEGIN:|3-startMIDlet|2|
 //</editor-fold>//GEN-END:|3-startMIDlet|2|
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Method: resumeMIDlet ">//GEN-BEGIN:|4-resumeMIDlet|0|4-preAction
@@ -157,7 +149,7 @@ sendMethod();//GEN-LINE:|7-commandAction|2|278-postAction
                 // write post-action user code here
 } else if (command == okCommand) {//GEN-LINE:|7-commandAction|3|280-preAction
                 // write pre-action user code here
-switchDisplayable(null, getTerminalForm());//GEN-LINE:|7-commandAction|4|280-postAction
+switchDisplayable(null, getConsoleScreen());//GEN-LINE:|7-commandAction|4|280-postAction
                 // write post-action user code here
 }//GEN-BEGIN:|7-commandAction|5|192-preAction
 } else if (displayable == connectWaitScreen) {
@@ -183,80 +175,81 @@ exitMIDlet();//GEN-LINE:|7-commandAction|12|218-postAction
         // write pre-action user code here
 switchDisplayable(null, getForm1());//GEN-LINE:|7-commandAction|14|220-postAction
         // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|15|177-preAction
+}//GEN-BEGIN:|7-commandAction|15|294-preAction
+} else if (displayable == consoleScreen) {
+    if (command == composeTextCommand) {//GEN-END:|7-commandAction|15|294-preAction
+        // write pre-action user code here
+switchDisplayable(null, getTextBox());//GEN-LINE:|7-commandAction|16|294-postAction
+        // write post-action user code here
+        textBox.delete(0, textBox.size());
+    } else if (command == disconnectCommand) {//GEN-LINE:|7-commandAction|17|293-preAction
+        // write pre-action user code here
+disconnectMethod();//GEN-LINE:|7-commandAction|18|293-postAction
+        // write post-action user code here
+} else if (command == exitCommand5) {//GEN-LINE:|7-commandAction|19|291-preAction
+        // write pre-action user code here
+exitMIDlet();//GEN-LINE:|7-commandAction|20|291-postAction
+        // write post-action user code here
+} else if (command == helpCommand4) {//GEN-LINE:|7-commandAction|21|292-preAction
+        // write pre-action user code here
+switchDisplayable(null, getForm1());//GEN-LINE:|7-commandAction|22|292-postAction
+        // write post-action user code here
+}//GEN-BEGIN:|7-commandAction|23|177-preAction
 } else if (displayable == deviceDiscoveryWaitScreen) {
-    if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|15|177-preAction
+    if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|23|177-preAction
  // write pre-action user code here
-switchDisplayable(getDiscoveryFailedAlert(), getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|16|177-postAction
+switchDisplayable(getDiscoveryFailedAlert(), getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|24|177-postAction
  // write post-action user code here
-} else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|17|176-preAction
+} else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|25|176-preAction
  // write pre-action user code here
-switchDisplayable(null, getDevicesList());//GEN-LINE:|7-commandAction|18|176-postAction
+switchDisplayable(null, getDevicesList());//GEN-LINE:|7-commandAction|26|176-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|19|182-preAction
+}//GEN-BEGIN:|7-commandAction|27|182-preAction
 } else if (displayable == devicesList) {
-    if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|19|182-preAction
+    if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|27|182-preAction
                 // write pre-action user code here
-devicesListAction();//GEN-LINE:|7-commandAction|20|182-postAction
+devicesListAction();//GEN-LINE:|7-commandAction|28|182-postAction
                 // write post-action user code here
-} else if (command == backCommand) {//GEN-LINE:|7-commandAction|21|188-preAction
+} else if (command == backCommand) {//GEN-LINE:|7-commandAction|29|188-preAction
                 // write pre-action user code here
-switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|22|188-postAction
+switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|30|188-postAction
                 // write post-action user code here
-} else if (command == connectCommand) {//GEN-LINE:|7-commandAction|23|185-preAction
+} else if (command == connectCommand) {//GEN-LINE:|7-commandAction|31|185-preAction
                 // write pre-action user code here
-switchDisplayable(null, getConnectWaitScreen());//GEN-LINE:|7-commandAction|24|185-postAction
+switchDisplayable(null, getConnectWaitScreen());//GEN-LINE:|7-commandAction|32|185-postAction
                 // write post-action user code here
-} else if (command == exitCommand2) {//GEN-LINE:|7-commandAction|25|203-preAction
+} else if (command == exitCommand2) {//GEN-LINE:|7-commandAction|33|203-preAction
  // write pre-action user code here
-exitMIDlet();//GEN-LINE:|7-commandAction|26|203-postAction
+exitMIDlet();//GEN-LINE:|7-commandAction|34|203-postAction
  // write post-action user code here
-} else if (command == helpCommand) {//GEN-LINE:|7-commandAction|27|205-preAction
+} else if (command == helpCommand) {//GEN-LINE:|7-commandAction|35|205-preAction
  // write pre-action user code here
-switchDisplayable(null, getForm1());//GEN-LINE:|7-commandAction|28|205-postAction
+switchDisplayable(null, getForm1());//GEN-LINE:|7-commandAction|36|205-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|29|198-preAction
+}//GEN-BEGIN:|7-commandAction|37|198-preAction
 } else if (displayable == discoveryFailedAlert) {
-    if (command == backCommand1) {//GEN-END:|7-commandAction|29|198-preAction
+    if (command == backCommand1) {//GEN-END:|7-commandAction|37|198-preAction
  // write pre-action user code here
-switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|30|198-postAction
+switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|38|198-postAction
  // write post-action user code here
-} else if (command == exitCommand1) {//GEN-LINE:|7-commandAction|31|201-preAction
+} else if (command == exitCommand1) {//GEN-LINE:|7-commandAction|39|201-preAction
  // write pre-action user code here
-exitMIDlet();//GEN-LINE:|7-commandAction|32|201-postAction
+exitMIDlet();//GEN-LINE:|7-commandAction|40|201-postAction
  // write post-action user code here
-} else if (command == helpCommand1) {//GEN-LINE:|7-commandAction|33|207-preAction
+} else if (command == helpCommand1) {//GEN-LINE:|7-commandAction|41|207-preAction
  // write pre-action user code here
-switchDisplayable(null, getForm1());//GEN-LINE:|7-commandAction|34|207-postAction
+switchDisplayable(null, getForm1());//GEN-LINE:|7-commandAction|42|207-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|35|211-preAction
+}//GEN-BEGIN:|7-commandAction|43|211-preAction
 } else if (displayable == form1) {
-    if (command == backCommand2) {//GEN-END:|7-commandAction|35|211-preAction
+    if (command == backCommand2) {//GEN-END:|7-commandAction|43|211-preAction
  // write pre-action user code here
-switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|36|211-postAction
+switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|44|211-postAction
  // write post-action user code here
-} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|37|19-preAction
+} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|45|19-preAction
                 // write pre-action user code here
-exitMIDlet();//GEN-LINE:|7-commandAction|38|19-postAction
+exitMIDlet();//GEN-LINE:|7-commandAction|46|19-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|39|228-preAction
-} else if (displayable == terminalForm) {
-    if (command == composeTextCommand) {//GEN-END:|7-commandAction|39|228-preAction
- // write pre-action user code here
-switchDisplayable(null, getTextBox());//GEN-LINE:|7-commandAction|40|228-postAction
- // write post-action user code here
-} else if (command == disconnectCommand) {//GEN-LINE:|7-commandAction|41|242-preAction
- // write pre-action user code here
-disconnectMethod();//GEN-LINE:|7-commandAction|42|242-postAction
- // write post-action user code here
-} else if (command == exitCommand5) {//GEN-LINE:|7-commandAction|43|246-preAction
- // write pre-action user code here
-exitMIDlet();//GEN-LINE:|7-commandAction|44|246-postAction
- // write post-action user code here
-} else if (command == helpCommand4) {//GEN-LINE:|7-commandAction|45|244-preAction
- // write pre-action user code here
-switchDisplayable(null, getForm1());//GEN-LINE:|7-commandAction|46|244-postAction
- // write post-action user code here
 }//GEN-BEGIN:|7-commandAction|47|235-preAction
 } else if (displayable == textBox) {
     if (command == backCommand4) {//GEN-END:|7-commandAction|47|235-preAction
@@ -389,9 +382,16 @@ task = new SimpleCancellableTask();//GEN-BEGIN:|178-getter|1|178-execute
 // write task-execution user code here
     Vector devices = BTSerialPort.discoverDevices();
     int deviceCount = devices.size();
+    System.out.println("Count of bluetooth devices found: " + deviceCount);
+    List devList = getDevicesList();
+    devList.deleteAll();
     for (int i = 0; i < deviceCount; i++) {
+        try {
         RemoteDevice remoteDevice = (RemoteDevice) devices.elementAt(i);
-        devicesList.append(remoteDevice.getBluetoothAddress(), null);
+        devList.append(remoteDevice.getBluetoothAddress(), null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }            
                 }//GEN-BEGIN:|178-getter|2|178-postInit
             });//GEN-END:|178-getter|2|178-postInit
@@ -678,7 +678,7 @@ helpCommand2 = new Command("Help", Command.HELP, 0);//GEN-LINE:|219-getter|1|219
         if (composeTextCommand == null) {
 //GEN-END:|227-getter|0|227-preInit
  // write pre-init user code here
-composeTextCommand = new Command("Screen", Command.SCREEN, 0);//GEN-LINE:|227-getter|1|227-postInit
+composeTextCommand = new Command("Write", Command.SCREEN, 0);//GEN-LINE:|227-getter|1|227-postInit
  // write post-init user code here
 }//GEN-BEGIN:|227-getter|2|
         return composeTextCommand;
@@ -899,27 +899,7 @@ connectionFailedAlert = new Alert("Conneciton failed", "Connection to selected d
     }
 //</editor-fold>//GEN-END:|213-getter|2|
 
-//<editor-fold defaultstate="collapsed" desc=" Generated Getter: terminalForm ">//GEN-BEGIN:|226-getter|0|226-preInit
-    /**
-     * Returns an initialized instance of terminalForm component.
-     *
-     * @return the initialized component instance
-     */
-    public Form getTerminalForm() {
-        if (terminalForm == null) {
-//GEN-END:|226-getter|0|226-preInit
- // write pre-init user code here
-terminalForm = new Form("form");//GEN-BEGIN:|226-getter|1|226-postInit
-            terminalForm.addCommand(getComposeTextCommand());
-            terminalForm.addCommand(getDisconnectCommand());
-            terminalForm.addCommand(getHelpCommand4());
-            terminalForm.addCommand(getExitCommand5());
-            terminalForm.setCommandListener(this);//GEN-END:|226-getter|1|226-postInit
- // write post-init user code here
-}//GEN-BEGIN:|226-getter|2|
-        return terminalForm;
-    }
-//</editor-fold>//GEN-END:|226-getter|2|
+
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Getter: textBox ">//GEN-BEGIN:|230-getter|0|230-preInit
     /**
@@ -954,23 +934,14 @@ textBox = new TextBox("textBox", null, 100, TextField.ANY);//GEN-BEGIN:|230-gett
 
  // start to listen for incoming conneciton
  new Thread(bluetoothSerialPort).start();
+ System.out.println("bluetooth serial port started");
 
-        switchDisplayable(null, getTerminalForm());//GEN-LINE:|260-entry|1|261-postAction
+        switchDisplayable(null, getConsoleScreen());//GEN-LINE:|260-entry|1|261-postAction
  // write post-action user code here
 }//GEN-BEGIN:|260-entry|2|
 //</editor-fold>//GEN-END:|260-entry|2|
 
-//<editor-fold defaultstate="collapsed" desc=" Generated Method: sendMethod2 ">//GEN-BEGIN:|264-entry|0|265-preAction
-    /**
-     * Performs an action assigned to the sendMethod2 entry-point.
-     */
-    public void sendMethod2() {
-//GEN-END:|264-entry|0|265-preAction
- // write pre-action user code here 
-switchDisplayable(null, getTerminalForm());//GEN-LINE:|264-entry|1|265-postAction
- // write post-action user code here
-}//GEN-BEGIN:|264-entry|2|
-//</editor-fold>//GEN-END:|264-entry|2|
+
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Method: disconnectMethod ">//GEN-BEGIN:|268-entry|0|269-preAction
     /**
@@ -993,17 +964,17 @@ switchDisplayable(null, getTerminalForm());//GEN-LINE:|264-entry|1|265-postActio
 //GEN-END:|272-if|0|272-preIf
  // enter pre-if user code here
     boolean sendSuccessfull = true;
-    String textToSend = textBox.getString();
+    String textToSend = textBox.getString() + "\r\n";
     try {
     bluetoothSerialPort.write(textToSend);
-    sterm.write(textToSend);
+    consoleScreen.write(textToSend);
     } catch (IOException ex) {
         sendSuccessfull = false;
     }
 
         if (sendSuccessfull) {//GEN-LINE:|272-if|1|273-preAction
  // write pre-action user code here
-switchDisplayable(null, getTerminalForm());//GEN-LINE:|272-if|2|273-postAction
+switchDisplayable(null, getConsoleScreen());//GEN-LINE:|272-if|2|273-postAction
  // write post-action user code here
 } else {//GEN-LINE:|272-if|3|274-preAction
  // write pre-action user code here
@@ -1069,6 +1040,32 @@ alert = new Alert("alert");//GEN-BEGIN:|275-getter|1|275-postInit
     }
 //</editor-fold>//GEN-END:|275-getter|2|
 
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: consoleScreen ">//GEN-BEGIN:|284-getter|0|284-preInit
+    /**
+     * Returns an initialized instance of consoleScreen component.
+     *
+     * @return the initialized component instance
+     */
+    public ConsoleScreen getConsoleScreen() {
+        if (consoleScreen == null) {
+//GEN-END:|284-getter|0|284-preInit
+ // write pre-init user code here
+            consoleScreen = new ConsoleScreen(this.getDisplay());                                      
+            consoleScreen.addCommand(getComposeTextCommand());
+            consoleScreen.addCommand(getDisconnectCommand());
+            consoleScreen.addCommand(getHelpCommand4());
+            consoleScreen.addCommand(getExitCommand5());
+            consoleScreen.setCommandListener(this);                                    
+
+//GEN-LINE:|284-getter|1|284-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|284-getter|2|
+        return consoleScreen;
+    }
+//</editor-fold>//GEN-END:|284-getter|2|
+
+
+
     /**
      * Returns a display instance.
      *
@@ -1116,6 +1113,16 @@ alert = new Alert("alert");//GEN-BEGIN:|275-getter|1|275-postInit
      * terminated and all resources has to be released.
      */
     public void destroyApp(boolean unconditional) {
+    }
+    
+    public void propertyChange(String propertyName, int oldValue, int newValue) {
+        //System.out.println(propertyName);
+        if (propertyName.compareTo("character read") == 0) {
+            //System.out.println("char received: " + (char) newValue);
+            consoleScreen.writeChar((char) newValue);
+        } else if (propertyName.compareTo("disconnected") == 0) {
+            disconnectMethod();
+        }
     }
 
 }
